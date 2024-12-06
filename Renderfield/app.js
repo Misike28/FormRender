@@ -77,8 +77,28 @@ let form = renderForm({
         {
             id: "email1",
             type: "email",
-            label: "ez itt most az első ímél",
+            label: "ez itt most az első email",
+        },
+        {
+            id: "select1",
+            type: "select",
+            label: "Ez itt most egy kiválasztás",
+            options : [
+                {
+                    value: "elso",
+                    title: "Első választás"
+                },
+                {
+                    value: "masodik",
+                    title: "Második választás"
+                },
+                {
+                    value: "harmadik",
+                    title: "Harmadik"
+                }
+            ]
         }
+
     ]
 })
 app.appendChild(form)

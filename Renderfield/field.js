@@ -8,6 +8,8 @@ export function renderField(obj) {
             return renderEmail(obj)
         case "default":
             return renderDefault(obj)
+        case "select":
+            return renderSelect(obj)
     }
 }
 
@@ -39,7 +41,6 @@ function renderNumber(obj) {
         //     //     field.value = obj.state[obj.id]
         //     //     return
         //     // }
-
         //     obj.state[obj.id] = value
         //     field.value = value
         // })
@@ -48,6 +49,25 @@ function renderNumber(obj) {
         return field
     })
 }
+function renderSelect(obj) {
+    return renderLabel(obj, (obj) => {
+    let field = document.createElement("select")
+    field.id = obj.id
+    
+    obj.options.forEach(element => {
+        let option = document.createElement("option")
+        option.value = element.value
+        option.innerText = element.title
+
+        field.append(option)
+        field.addEventListener("input", (event) => { OnValueUpdated(obj, field) })
+
+    });
+    
+    return field
+})
+}   
+        
 
 function renderEmail(obj) {
     return renderLabel(obj, (obj, container) => {
@@ -106,7 +126,6 @@ function renderEmail(obj) {
 function renderDefault(obj) {
     let field = document.createElement("div")
     field.id = obj.id
-
     return field
 }
 
@@ -173,15 +192,23 @@ export function renderForm(form) {
             _form.appendChild(but)
         }
 
-        if (controls.onClear != null) {
+        if (controls.onClear) {
             let but = document.createElement("button")
             but.id = "form_onclear"
             but.innerText = "Clear"
-            but.onclick = () => { controls.onClear(formState) }
+            but.onclick = () => {
+                controls.onClear(formState)
+
+                for (const [key, value] of Object.entries(formState)) {
+                    delete formState[key]
+                }
+
+                UpdateFormStateOutput(formState)
+            }
             _form.appendChild(but)
+            
         }
     }
-
     return _form
 }
 
